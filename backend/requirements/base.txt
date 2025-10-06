@@ -1,0 +1,38 @@
+# Django
+Django==5.0.*
+djangorestframework==3.14.*
+djangorestframework-simplejwt==5.3.*
+django-cors-headers==4.3.*
+django-filter==23.5
+django-environ==0.11.*
+
+# Database
+psycopg2-binary==2.9.*
+pymongo==4.6.*
+
+# Caching & Queue
+redis==5.0.*
+celery==5.3.*
+django-redis==5.4.*
+
+# Web Scraping
+scrapy==2.11.*
+selenium==4.16.*
+beautifulsoup4==4.12.*
+requests==2.31.*
+PySocks==1.7.*
+stem==1.8.*
+
+# Security
+python-jose[cryptography]==3.3.*
+passlib[bcrypt]==1.7.*
+python-multipart==0.0.6
+
+# Utilities
+python-dotenv==1.0.*
+gunicorn==21.2.*
+whitenoise==6.6.*
+Pillow==10.1.*
+
+# Monitoring
+sentry-sdk==1.39.*
