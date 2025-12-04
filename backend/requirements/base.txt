@@ -1,5 +1,5 @@
 # Django
-Django==5.0.*
+Django==4.2.*
 djangorestframework==3.14.*
 djangorestframework-simplejwt==5.3.*
 django-cors-headers==4.3.*
@@ -23,6 +23,14 @@ requests==2.31.*
 PySocks==1.7.*
 stem==1.8.*
 
+# Security Scanning
+python-nmap==0.7.*
+dnspython==2.6.*
+tldextract==5.1.*
+
+# Domain & Reputation APIs
+whois==0.9.*
+
 # Security
 python-jose[cryptography]==3.3.*
 passlib[bcrypt]==1.7.*
@@ -36,3 +44,9 @@ Pillow==10.1.*
 
 # Monitoring
 sentry-sdk==1.39.*
+psutil==5.9.*
+django-celery-beat==2.5.*
+
+# Telegram
+python-telegram-bot==20.7.*
+requests==2.31.*

@@ -3,4 +3,4 @@ from django.apps import AppConfig
 
 class BreachesConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'breaches'
+    name = 'apps.breaches'

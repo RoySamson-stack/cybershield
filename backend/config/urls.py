@@ -6,12 +6,18 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include([
+        path('', include('apps.core.urls')),  # Core endpoints (health, organizations, etc.)
         path('auth/', include('apps.authentication.urls')),
         path('ransomware/', include('apps.ransomware.urls')),
         path('breaches/', include('apps.breaches.urls')),
         path('scanner/', include('apps.scanner.urls')),
         path('phishing/', include('apps.phishing.urls')),
         path('alerts/', include('apps.alerts.urls')),
+        path('threats/', include('apps.threats.urls')),
+        path('telegram/', include('apps.telegram.urls')),
+        path('cve/', include('apps.cve.urls')),
+        path('monitoring/', include('apps.monitoring.urls')),
+        path('malware/', include('apps.malware.urls')),
     ])),
 ]
 

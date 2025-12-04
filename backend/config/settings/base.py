@@ -9,13 +9,15 @@ env = environ.Env(
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-environ.Env.read_env(os.path.join(BASE_DIR.parent, '.env'))
+env_file = os.path.join(BASE_DIR.parent, '.env')
+if os.path.exists(env_file):
+    environ.Env.read_env(env_file)
 
-SECRET_KEY = env('DJANGO_SECRET_KEY')
-DEBUG = env('DJANGO_DEBUG')
-ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS')
+SECRET_KEY = env('DJANGO_SECRET_KEY', default='cybershield-insecure-test-key')
+DEBUG = env.bool('DJANGO_DEBUG', default=False)
+ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
+DISABLE_AUTH_FOR_TESTING = env.bool('DISABLE_AUTH_FOR_TESTING', default=False)
 
-# Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -24,13 +26,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
-    # Third-party
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
     'django_filters',
+    'django_celery_beat',
     
-    # Local apps
     'apps.authentication',
     'apps.ransomware',
     'apps.breaches',
@@ -38,6 +39,11 @@ INSTALLED_APPS = [
     'apps.phishing',
     'apps.alerts',
     'apps.core',
+    'apps.threats',
+    'apps.telegram',
+    'apps.cve',
+    'apps.monitoring',
+    'apps.malware',
 ]
 
 MIDDLEWARE = [
@@ -48,6 +54,9 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'apps.core.middleware.APIKeyMiddleware',
+    'apps.core.middleware.OrganizationMiddleware',
+    'apps.core.middleware.AuditLogMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -73,70 +82,46 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 ASGI_APPLICATION = 'config.asgi.application'
 
-# Database
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('POSTGRES_DB'),
-        'USER': env('POSTGRES_USER'),
-        'PASSWORD': env('POSTGRES_PASSWORD'),
-        'HOST': env('POSTGRES_HOST'),
-        'PORT': env('POSTGRES_PORT'),
+        'NAME': env('POSTGRES_DB', default='cybershield'),
+        'USER': env('POSTGRES_USER', default='cybershield'),
+        'PASSWORD': env('POSTGRES_PASSWORD', default='cybershield'),
+        'HOST': env('POSTGRES_HOST', default='localhost'),
+        'PORT': env('POSTGRES_PORT', default='5432'),
     }
 }
 
-# MongoDB
 MONGODB_CONFIG = {
-    'host': env('MONGODB_HOST'),
-    'port': int(env('MONGODB_PORT')),
-    'db': env('MONGODB_DB'),
-    'username': env('MONGODB_USER'),
-    'password': env('MONGODB_PASSWORD'),
+    'host': env('MONGODB_HOST', default='localhost'),
+    'port': int(env('MONGODB_PORT', default=27017)),
+    'db': env('MONGODB_DB', default='cybershield'),
+    'username': env('MONGODB_USER', default='cybershield'),
+    'password': env('MONGODB_PASSWORD', default='cybershield'),
 }
 
-# Redis
-REDIS_URL = f"redis://{env('REDIS_HOST')}:{env('REDIS_PORT')}/0"
-
-CACHES = {
-    'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': REDIS_URL,
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-        }
-    }
-}
-
-# Password validation
-AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
-]
-
-# Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# REST Framework
+AUTH_USER_MODEL = 'core.User'
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+    ) if DISABLE_AUTH_FOR_TESTING else (
         'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_FILTER_BACKENDS': (
@@ -154,7 +139,6 @@ REST_FRAMEWORK = {
     }
 }
 
-# JWT Settings
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=int(env('JWT_ACCESS_TOKEN_LIFETIME', default=15))),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=int(env('JWT_REFRESH_TOKEN_LIFETIME', default=7))),
@@ -166,27 +150,29 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
-# CORS
-CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS')
+CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS', default=['http://localhost:3000', 'http://127.0.0.1:3000'])
 CORS_ALLOW_CREDENTIALS = True
 
-# Celery
-CELERY_BROKER_URL = env('CELERY_BROKER_URL')
-CELERY_RESULT_BACKEND = env('CELERY_RESULT_BACKEND')
+CELERY_BROKER_URL = env('CELERY_BROKER_URL', default='redis://localhost:6379/0')
+CELERY_RESULT_BACKEND = env('CELERY_RESULT_BACKEND', default=CELERY_BROKER_URL)
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
 
-# Email
-EMAIL_BACKEND = env('EMAIL_BACKEND')
+try:
+    from apps.monitoring.celery_beat_schedule import CELERY_BEAT_SCHEDULE
+    CELERY_BEAT_SCHEDULE = CELERY_BEAT_SCHEDULE
+except ImportError:
+    CELERY_BEAT_SCHEDULE = {}
+
+EMAIL_BACKEND = env('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
 EMAIL_HOST = env('EMAIL_HOST', default='')
 EMAIL_PORT = env.int('EMAIL_PORT', default=587)
 EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', default=True)
 EMAIL_HOST_USER = env('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='')
 
-# Security
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'

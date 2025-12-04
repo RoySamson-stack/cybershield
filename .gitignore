@@ -42,3 +42,12 @@ Thumbs.db
 *.pid
 *.seed
 *.log
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# Local documentation (keep locally, don't push)
+*_LOCAL.md
+*_NOTES.md
+*_PROGRESS.md
