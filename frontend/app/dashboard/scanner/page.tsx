@@ -16,36 +16,6 @@ export default function ScannerPage() {
   }, []);
 
   const fetchScannerData = async () => {
-    const isDemo = localStorage.getItem('is_demo') === 'true';
-    
-    if (isDemo) {
-      setTargets([
-        { id: '1', target_url: 'https://example.com', target_type: 'website', status: 'active', last_scan: new Date().toISOString() },
-        { id: '2', target_url: '192.168.1.1', target_type: 'ip', status: 'active', last_scan: new Date().toISOString() },
-      ]);
-      setScans([
-        { id: '1', target: 'example.com', scan_type: 'vulnerability', status: 'completed', vulnerabilities_found: 5, started_at: new Date().toISOString() },
-        { id: '2', target: '192.168.1.1', scan_type: 'port', status: 'running', vulnerabilities_found: 0, started_at: new Date().toISOString() },
-      ]);
-      setVulnerabilities([
-        { id: '1', title: 'SQL Injection', severity: 'high', target: 'example.com', discovered_at: new Date().toISOString() },
-        { id: '2', title: 'XSS Vulnerability', severity: 'medium', target: 'example.com', discovered_at: new Date().toISOString() },
-      ]);
-      setStats({
-        total_targets: 45,
-        total_scans: 234,
-        total_vulnerabilities: 89,
-        by_severity: [
-          { severity: 'Critical', count: 12 },
-          { severity: 'High', count: 28 },
-          { severity: 'Medium', count: 35 },
-          { severity: 'Low', count: 14 },
-        ],
-      });
-      setLoading(false);
-      return;
-    }
-    
     try {
       const [targetsRes, scansRes, vulnsRes] = await Promise.all([
         api.get('/scanner/targets/').catch(() => ({ data: { results: [] } })),

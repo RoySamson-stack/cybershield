@@ -14,7 +14,10 @@ router.register(r'usage', UsageMetricsViewSet, basename='usage')
 router.register(r'audit-logs', AuditLogViewSet, basename='audit-log')
 
 urlpatterns = [
+    path('', views.api_root, name='api_root'),
     path('health/', views.health_check, name='health_check'),
     path('metrics/', views.metrics, name='metrics'),
-    path('', include(router.urls)),
 ]
+
+# Add router URLs (these don't include a root path, so no conflict)
+urlpatterns += router.urls

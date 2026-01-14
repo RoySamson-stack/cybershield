@@ -9,6 +9,30 @@ import os
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
+def api_root(request):
+    """API root endpoint providing available endpoints"""
+    return Response({
+        'name': 'CyberShield Intelligence Platform API',
+        'version': '1.0.0',
+        'endpoints': {
+            'health': '/api/v1/health/',
+            'organizations': '/api/v1/organizations/',
+            'auth': '/api/v1/auth/',
+            'ransomware': '/api/v1/ransomware/',
+            'breaches': '/api/v1/breaches/',
+            'scanner': '/api/v1/scanner/',
+            'phishing': '/api/v1/phishing/',
+            'cve': '/api/v1/cve/',
+            'monitoring': '/api/v1/monitoring/',
+            'malware': '/api/v1/malware/',
+            'alerts': '/api/v1/alerts/',
+            'threats': '/api/v1/threats/',
+        }
+    })
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
 def health_check(request):
     """Health check endpoint for monitoring"""
     health_status = {

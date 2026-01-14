@@ -30,7 +30,7 @@ docker-compose -f docker-compose.test.yml exec -T backend python manage.py test 
 
 # Check API health
 echo -e "${YELLOW}🏥 Checking API health...${NC}"
-HEALTH_CHECK=$(curl -s http://localhost:8000/api/v1/health/ || echo "FAILED")
+HEALTH_CHECK=$(curl -s http://localhost:8001/api/v1/health/ || echo "FAILED")
 if [[ "$HEALTH_CHECK" == *"status"* ]]; then
     echo -e "${GREEN}✅ API is healthy${NC}"
 else
@@ -42,11 +42,11 @@ echo -e "${YELLOW}🌐 Testing API endpoints...${NC}"
 
 # Test CVE endpoint
 echo "Testing CVE endpoint..."
-curl -s http://localhost:8000/api/v1/cve/cves/ | head -c 100 && echo "..." || echo "Failed"
+curl -s http://localhost:8001/api/v1/cve/cves/ | head -c 100 && echo "..." || echo "Failed"
 
 # Test Monitoring endpoints
 echo "Testing Monitoring endpoints..."
-curl -s http://localhost:8000/api/v1/monitoring/github-repos/ | head -c 100 && echo "..." || echo "Failed"
+curl -s http://localhost:8001/api/v1/monitoring/github-repos/ | head -c 100 && echo "..." || echo "Failed"
 
 echo ""
 echo -e "${GREEN}✅ Tests complete!${NC}"

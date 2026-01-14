@@ -15,17 +15,6 @@ export default function BreachesPage() {
   }, []);
 
   const fetchBreaches = async () => {
-    const isDemo = localStorage.getItem('is_demo') === 'true';
-    
-    if (isDemo) {
-      setBreaches([
-        { id: '1', organization: 'Healthcare Corp', industry: 'Healthcare', records_exposed: 5000000, breach_date: '2024-01-15', discovered_date: new Date().toISOString(), data_types: ['email', 'password', 'ssn'], status: 'confirmed' },
-        { id: '2', organization: 'Finance Inc', industry: 'Finance', records_exposed: 2500000, breach_date: '2024-01-10', discovered_date: new Date().toISOString(), data_types: ['email', 'credit_card'], status: 'confirmed' },
-      ]);
-      setLoading(false);
-      return;
-    }
-    
     try {
       const response = await api.get('/breaches/');
       setBreaches(response.data.results || response.data || []);
@@ -37,21 +26,6 @@ export default function BreachesPage() {
   };
 
   const fetchStats = async () => {
-    const isDemo = localStorage.getItem('is_demo') === 'true';
-    
-    if (isDemo) {
-      setStats({
-        total: 1247,
-        total_records: 500000000,
-        by_industry: [
-          { industry: 'Healthcare', count: 456 },
-          { industry: 'Finance', count: 234 },
-          { industry: 'Technology', count: 189 },
-        ],
-      });
-      return;
-    }
-    
     try {
       const response = await api.get('/breaches/stats/');
       setStats(response.data || {});

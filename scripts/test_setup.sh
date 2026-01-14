@@ -57,7 +57,7 @@ echo -e "${GREEN}✅ MongoDB is ready${NC}"
 
 # Wait for backend API to respond
 echo -e "${YELLOW}🌐 Waiting for backend API...${NC}"
-until curl -sf http://localhost:8000/api/v1/health/ > /dev/null 2>&1; do
+until curl -sf http://localhost:8001/api/v1/health/ > /dev/null 2>&1; do
     echo "Waiting for backend health endpoint..."
     sleep 3
 done
@@ -79,10 +79,10 @@ echo ""
 echo -e "${GREEN}✅ Setup complete!${NC}"
 echo ""
 echo "📋 Service URLs:"
-echo "   - Frontend: http://localhost:3000"
-echo "   - Backend API: http://localhost:8000/api/v1"
-echo "   - Admin Panel: http://localhost:8000/admin"
-echo "   - API Docs: http://localhost:8000/api/v1/"
+echo "   - Frontend: http://localhost:3001"
+echo "   - Backend API: http://localhost:8001/api/v1"
+echo "   - Admin Panel: http://localhost:8001/admin"
+echo "   - API Docs: http://localhost:8001/api/v1/"
 echo ""
 echo "🧪 To run tests:"
 echo "   docker-compose -f docker-compose.test.yml exec backend python manage.py test"

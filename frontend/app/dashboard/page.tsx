@@ -17,25 +17,6 @@ export default function DashboardPage() {
   }, [timeRange]);
 
   const fetchDashboardData = async () => {
-    const isDemo = localStorage.getItem('is_demo') === 'true';
-    
-    if (isDemo) {
-      setThreats([
-        { id: '1', title: 'Ransomware Campaign: LockBit 3.0', threat_type: 'ransomware', severity: 'critical', first_seen: new Date().toISOString() },
-        { id: '2', title: 'Data Breach: Healthcare Sector', threat_type: 'data_breach', severity: 'high', first_seen: new Date().toISOString() },
-        { id: '3', title: 'C2 Server Activity Detected', threat_type: 'c2', severity: 'medium', first_seen: new Date().toISOString() },
-        { id: '4', title: 'Phishing Campaign Active', threat_type: 'phishing', severity: 'high', first_seen: new Date().toISOString() },
-      ]);
-      setStats({
-        threats: 1247,
-        c2: { total: 156, active: 89 },
-        credentials: { total: 125000, exposed: 34200 },
-        scans: 234,
-      });
-      setLoading(false);
-      return;
-    }
-    
     try {
       const [threatsRes, c2Res, credentialsRes] = await Promise.all([
         api.get('/threats/threat-intelligence/').catch(() => ({ data: { results: [] } })),

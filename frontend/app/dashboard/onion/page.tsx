@@ -15,31 +15,6 @@ export default function OnionPage() {
   }, []);
 
   const fetchOnionData = async () => {
-    const isDemo = localStorage.getItem('is_demo') === 'true';
-    
-    if (isDemo) {
-      setSites([
-        { id: '1', onion_address: 'lockbitapt.xyz', site_type: 'ransomware', status: 'active', first_seen: new Date().toISOString() },
-        { id: '2', onion_address: 'alphv.xyz', site_type: 'ransomware', status: 'active', first_seen: new Date().toISOString() },
-      ]);
-      setPosts([
-        { id: '1', post_title: 'Healthcare Corp Data Leak', onion_site: 'lockbitapt.xyz', posted_date: new Date().toISOString(), affected_organization: 'Healthcare Corp', record_count: 5000000 },
-        { id: '2', post_title: 'Finance Inc Breach', onion_site: 'alphv.xyz', posted_date: new Date().toISOString(), affected_organization: 'Finance Inc', record_count: 2500000 },
-      ]);
-      setStats({
-        total_sites: 45,
-        active_sites: 32,
-        total_posts: 1247,
-        by_type: [
-          { site_type: 'Ransomware', count: 25 },
-          { site_type: 'Marketplace', count: 12 },
-          { site_type: 'Forum', count: 8 },
-        ],
-      });
-      setLoading(false);
-      return;
-    }
-    
     try {
       const [sitesRes, postsRes] = await Promise.all([
         api.get('/threats/onion-sites/').catch(() => ({ data: { results: [] } })),

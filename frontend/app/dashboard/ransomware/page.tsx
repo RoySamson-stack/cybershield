@@ -17,32 +17,6 @@ export default function RansomwarePage() {
   }, []);
 
   const fetchRansomwareData = async () => {
-    const isDemo = localStorage.getItem('is_demo') === 'true';
-    
-    if (isDemo) {
-      setGroups([
-        { id: '1', name: 'LockBit 3.0', threat_level: 'critical', active: true, victim_count: 234, leak_site: 'lockbitapt.xyz', first_seen: new Date().toISOString() },
-        { id: '2', name: 'BlackCat', threat_level: 'high', active: true, victim_count: 156, leak_site: 'alphv.xyz', first_seen: new Date().toISOString() },
-        { id: '3', name: 'Clop', threat_level: 'high', active: true, victim_count: 89, leak_site: 'clop.online', first_seen: new Date().toISOString() },
-      ]);
-      setIncidents([
-        { id: '1', group: 'LockBit 3.0', victim: 'Healthcare Corp', country: 'US', date: new Date().toISOString(), status: 'active' },
-        { id: '2', group: 'BlackCat', victim: 'Finance Inc', country: 'UK', date: new Date().toISOString(), status: 'active' },
-      ]);
-      setStats({
-        total_groups: 45,
-        active_groups: 32,
-        total_incidents: 1247,
-        by_country: [
-          { country: 'United States', count: 456 },
-          { country: 'United Kingdom', count: 234 },
-          { country: 'Germany', count: 189 },
-        ],
-      });
-      setLoading(false);
-      return;
-    }
-    
     try {
       const [groupsRes, incidentsRes] = await Promise.all([
         api.get('/ransomware/groups/').catch(() => ({ data: { results: [] } })),

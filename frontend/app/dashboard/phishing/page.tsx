@@ -17,31 +17,6 @@ export default function PhishingPage() {
   }, []);
 
   const fetchPhishingData = async () => {
-    const isDemo = localStorage.getItem('is_demo') === 'true';
-    
-    if (isDemo) {
-      setCampaigns([
-        { id: '1', name: 'Banking Phish', target_sector: 'Finance', status: 'active', domains_count: 12, first_seen: new Date().toISOString() },
-        { id: '2', name: 'Email Credential Harvest', target_sector: 'Technology', status: 'active', domains_count: 8, first_seen: new Date().toISOString() },
-      ]);
-      setDomains([
-        { id: '1', domain: 'secure-bank-login.com', campaign: 'Banking Phish', is_active: true, discovered_at: new Date().toISOString() },
-        { id: '2', domain: 'microsoft-verify.net', campaign: 'Email Credential Harvest', is_active: true, discovered_at: new Date().toISOString() },
-      ]);
-      setStats({
-        total_campaigns: 45,
-        active_campaigns: 32,
-        total_domains: 234,
-        by_sector: [
-          { sector: 'Finance', count: 125 },
-          { sector: 'Technology', count: 89 },
-          { sector: 'Healthcare', count: 20 },
-        ],
-      });
-      setLoading(false);
-      return;
-    }
-    
     try {
       const [campaignsRes, domainsRes] = await Promise.all([
         api.get('/phishing/campaigns/').catch(() => ({ data: { results: [] } })),

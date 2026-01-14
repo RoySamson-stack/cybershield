@@ -17,27 +17,6 @@ export default function AlertsPage() {
   }, [filter]);
 
   const fetchAlerts = async () => {
-    const isDemo = localStorage.getItem('is_demo') === 'true';
-    
-    if (isDemo) {
-      setAlerts([
-        { id: '1', title: 'Critical Threat Detected', alert_type: 'threat', severity: 'critical', status: 'active', created_at: new Date().toISOString() },
-        { id: '2', title: 'New Ransomware Group', alert_type: 'ransomware', severity: 'high', status: 'active', created_at: new Date().toISOString() },
-        { id: '3', title: 'Data Breach Alert', alert_type: 'breach', severity: 'high', status: 'resolved', created_at: new Date().toISOString() },
-      ]);
-      setStats({
-        total: 1247,
-        active: 89,
-        by_type: [
-          { type: 'Threat', count: 456 },
-          { type: 'Ransomware', count: 234 },
-          { type: 'Breach', count: 189 },
-        ],
-      });
-      setLoading(false);
-      return;
-    }
-    
     try {
       const params: any = {};
       if (filter !== 'all') params.status = filter;
@@ -52,16 +31,6 @@ export default function AlertsPage() {
   };
 
   const fetchRules = async () => {
-    const isDemo = localStorage.getItem('is_demo') === 'true';
-    
-    if (isDemo) {
-      setRules([
-        { id: '1', name: 'Critical Threat Alert', alert_type: 'threat', severity: 'critical', is_active: true },
-        { id: '2', name: 'Ransomware Detection', alert_type: 'ransomware', severity: 'high', is_active: true },
-      ]);
-      return;
-    }
-    
     try {
       const response = await api.get('/alerts/rules/');
       setRules(response.data.results || response.data || []);

@@ -51,11 +51,11 @@ docker-compose exec backend python manage.py create_subscription_plans
 ```
 
 ### Access Points
-- **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:8000/api/v1
-- **Admin Panel**: http://localhost:8000/admin
-- **API Docs**: http://localhost:8000/api/docs (if enabled)
-- **Health Check**: http://localhost:8000/api/v1/health/
+- **Frontend**: http://localhost:3001
+- **Backend API**: http://localhost:8001/api/v1
+- **Admin Panel**: http://localhost:8001/admin
+- **API Docs**: http://localhost:8001/api/docs (if enabled)
+- **Health Check**: http://localhost:8001/api/v1/health/
 
 ### Production Deployment
 

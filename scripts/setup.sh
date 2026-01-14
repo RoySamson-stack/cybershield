@@ -30,6 +30,6 @@ echo "👤 Create a superuser account"
 docker-compose exec backend python manage.py createsuperuser
 
 echo "✅ Setup complete!"
-echo "🌐 Frontend: http://localhost:3000"
-echo "🔧 Backend API: http://localhost:8000/api/v1"
-echo "⚙️  Admin Panel: http://localhost:8000/admin"
+echo "🌐 Frontend: http://localhost:3001"
+echo "🔧 Backend API: http://localhost:8001/api/v1"
+echo "⚙️  Admin Panel: http://localhost:8001/admin"
