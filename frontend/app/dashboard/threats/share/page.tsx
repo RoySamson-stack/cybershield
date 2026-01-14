@@ -39,7 +39,7 @@ export default function ShareThreatPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  const updateField = (field: keyof typeof defaultForm, value: any) => {
+  const updateField = (field: keyof typeof defaultForm, value: string | boolean) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -50,7 +50,7 @@ export default function ShareThreatPage() {
     setSuccess(null);
 
     try {
-      const payload: Record<string, any> = {
+      const payload: Record<string, unknown> = {
         threat_type: formData.threat_type,
         title: formData.title.trim(),
         description: formData.description.trim(),
@@ -63,7 +63,7 @@ export default function ShareThreatPage() {
       if (formData.indicators) {
         try {
           payload.indicators = JSON.parse(formData.indicators);
-        } catch (parseError) {
+        } catch {
           throw new Error('Indicators must be valid JSON (e.g. {"ips": ["1.1.1.1"]}).');
         }
       }
@@ -92,12 +92,13 @@ export default function ShareThreatPage() {
       await api.post('/threats/threat-intelligence/', payload);
       setSuccess('Threat shared successfully!');
       setTimeout(() => router.push('/dashboard/threats'), 1200);
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err as { message?: string; response?: { data?: Record<string, unknown> } };
       const message =
-        typeof err?.message === 'string' && err.message.includes('Indicators must be')
-          ? err.message
-          : err?.response?.data && typeof err.response.data === 'object'
-          ? Object.entries(err.response.data)
+        typeof error?.message === 'string' && error.message.includes('Indicators must be')
+          ? error.message
+          : error?.response?.data && typeof error.response.data === 'object'
+          ? Object.entries(error.response.data)
               .map(([key, val]) => `${key}: ${val}`)
               .join('\n')
           : 'Failed to share threat. Please try again.';

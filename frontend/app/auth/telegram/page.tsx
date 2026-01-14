@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import api from '@/lib/api';
 
-export default function TelegramAuthPage() {
+function TelegramAuthContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
@@ -100,6 +100,14 @@ export default function TelegramAuthPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function TelegramAuthPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-[#3390ec] via-[#2b7fd4] to-[#1e5a9e] flex items-center justify-center"><div className="text-white">Loading...</div></div>}>
+      <TelegramAuthContent />
+    </Suspense>
   );
 }
 

@@ -1,28 +1,23 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import api from '@/lib/api';
 
 export default function ThreatsPage() {
   const router = useRouter();
-  const [threats, setThreats] = useState<any[]>([]);
-  const [mapData, setMapData] = useState<any[]>([]);
+  const [threats, setThreats] = useState<Record<string, unknown>[]>([]);
+  const [mapData, setMapData] = useState<Record<string, unknown>[]>([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
     threat_type: '',
     severity: '',
   });
 
-  useEffect(() => {
-    fetchThreats();
-    fetchMapData();
-  }, [filters]);
-
-  const fetchThreats = async () => {
+  const fetchThreats = useCallback(async () => {
     try {
-      const params: any = {};
+      const params: Record<string, string> = {};
       if (filters.threat_type) params.threat_type = filters.threat_type;
       if (filters.severity) params.severity = filters.severity;
 
@@ -33,16 +28,21 @@ export default function ThreatsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters]);
 
-  const fetchMapData = async () => {
+  const fetchMapData = useCallback(async () => {
     try {
       const response = await api.get('/threats/threat-intelligence/map_data/');
       setMapData(response.data || []);
     } catch (error) {
       console.error('Failed to fetch map data:', error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchThreats();
+    fetchMapData();
+  }, [fetchThreats, fetchMapData]);
 
   const severityBreakdown = useMemo(() => {
     const counts: Record<string, number> = {};
@@ -255,7 +255,7 @@ export default function ThreatsPage() {
             </thead>
             <tbody className="bg-gray-800 divide-y divide-gray-700">
               {threats.length > 0 ? (
-                threats.map((threat: any) => (
+                threats.map((threat: Record<string, unknown>) => (
                   <tr
                     key={threat.id}
                     className="hover:bg-gray-700/50 transition cursor-pointer"

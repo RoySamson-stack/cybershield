@@ -7,9 +7,9 @@ import api from '@/lib/api';
 const COLORS = ['#ef4444', '#f97316', '#eab308', '#3b82f6'];
 
 export default function RansomwarePage() {
-  const [groups, setGroups] = useState<any[]>([]);
-  const [incidents, setIncidents] = useState<any[]>([]);
-  const [stats, setStats] = useState<any>({});
+  const [groups, setGroups] = useState<Record<string, unknown>[]>([]);
+  const [incidents, setIncidents] = useState<Record<string, unknown>[]>([]);
+  const [stats, setStats] = useState<Record<string, unknown>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -75,7 +75,7 @@ export default function RansomwarePage() {
           </div>
           <div>
             <p className="text-sm text-gray-400 mb-1">Active Groups</p>
-            <p className="text-2xl font-bold text-white">{stats.active_groups || groups.filter((g: any) => g.active).length}</p>
+            <p className="text-2xl font-bold text-white">{(stats.active_groups as number) || groups.filter((g) => (g.active as boolean)).length}</p>
           </div>
         </div>
         <div className="bg-gray-800 rounded-xl border border-gray-700 p-6">
@@ -139,9 +139,9 @@ export default function RansomwarePage() {
             <PieChart>
               <Pie
                 data={[
-                  { name: 'Critical', value: groups.filter((g: any) => g.threat_level === 'critical').length },
-                  { name: 'High', value: groups.filter((g: any) => g.threat_level === 'high').length },
-                  { name: 'Medium', value: groups.filter((g: any) => g.threat_level === 'medium').length },
+                  { name: 'Critical', value: groups.filter((g) => (g.threat_level as string) === 'critical').length },
+                  { name: 'High', value: groups.filter((g) => (g.threat_level as string) === 'high').length },
+                  { name: 'Medium', value: groups.filter((g) => (g.threat_level as string) === 'medium').length },
                 ]}
                 cx="50%"
                 cy="50%"
@@ -195,7 +195,7 @@ export default function RansomwarePage() {
             </thead>
             <tbody className="bg-gray-800 divide-y divide-gray-700">
               {groups.length > 0 ? (
-                groups.map((group: any) => (
+                groups.map((group: Record<string, unknown>) => (
                   <tr key={group.id} className="hover:bg-gray-700/50 transition">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-white">{group.name}</div>
@@ -268,7 +268,7 @@ export default function RansomwarePage() {
             </thead>
             <tbody className="bg-gray-800 divide-y divide-gray-700">
               {incidents.length > 0 ? (
-                incidents.map((incident: any) => (
+                incidents.map((incident: Record<string, unknown>) => (
                   <tr key={incident.id} className="hover:bg-gray-700/50 transition">
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">{incident.group || 'Unknown'}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{incident.victim || 'N/A'}</td>

@@ -36,7 +36,7 @@ export default function C2Page() {
 
   const familyBreakdown = useMemo(
     () =>
-      (stats.by_family || []).map((item: any) => ({
+      (stats.by_family || []).map((item: { c2_family?: string; count: number }) => ({
         name: item.c2_family || "Unknown",
         count: item.count,
       })),
@@ -131,7 +131,7 @@ export default function C2Page() {
           </div>
           {familyBreakdown.length ? (
             <ul className="space-y-3">
-              {familyBreakdown.map((item) => (
+              {familyBreakdown.map((item: { name: string; count: number }) => (
                 <li key={item.name} className="flex items-center justify-between">
                   <span className="text-gray-300">{item.name}</span>
                   <span className="text-white font-semibold">{item.count}</span>

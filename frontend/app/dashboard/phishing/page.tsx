@@ -7,9 +7,9 @@ import api from '@/lib/api';
 const COLORS = ['#ef4444', '#f97316', '#eab308', '#3b82f6'];
 
 export default function PhishingPage() {
-  const [campaigns, setCampaigns] = useState<any[]>([]);
-  const [domains, setDomains] = useState<any[]>([]);
-  const [stats, setStats] = useState<any>({});
+  const [campaigns, setCampaigns] = useState<Record<string, unknown>[]>([]);
+  const [domains, setDomains] = useState<Record<string, unknown>[]>([]);
+  const [stats] = useState<Record<string, unknown>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -74,7 +74,7 @@ export default function PhishingPage() {
           </div>
           <div>
             <p className="text-sm text-gray-400 mb-1">Active Campaigns</p>
-            <p className="text-2xl font-bold text-white">{stats.active_campaigns || campaigns.filter((c: any) => c.status === 'active').length}</p>
+            <p className="text-2xl font-bold text-white">{(stats.active_campaigns as number) || campaigns.filter((c) => (c.status as string) === 'active').length}</p>
           </div>
         </div>
         <div className="bg-gray-800 rounded-xl border border-gray-700 p-6">
@@ -155,7 +155,7 @@ export default function PhishingPage() {
             </thead>
             <tbody className="bg-gray-800 divide-y divide-gray-700">
               {campaigns.length > 0 ? (
-                campaigns.map((campaign: any) => (
+                campaigns.map((campaign: Record<string, unknown>) => (
                   <tr key={campaign.id} className="hover:bg-gray-700/50 transition">
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">{campaign.name || 'Unknown'}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{campaign.target_sector || 'N/A'}</td>
@@ -206,7 +206,7 @@ export default function PhishingPage() {
             </thead>
             <tbody className="bg-gray-800 divide-y divide-gray-700">
               {domains.length > 0 ? (
-                domains.map((domain: any) => (
+                domains.map((domain: Record<string, unknown>) => (
                   <tr key={domain.id} className="hover:bg-gray-700/50 transition">
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white font-mono">{domain.domain || 'N/A'}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{domain.campaign || 'N/A'}</td>

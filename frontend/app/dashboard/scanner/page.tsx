@@ -5,10 +5,10 @@ import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, R
 import api from '@/lib/api';
 
 export default function ScannerPage() {
-  const [targets, setTargets] = useState<any[]>([]);
-  const [scans, setScans] = useState<any[]>([]);
-  const [vulnerabilities, setVulnerabilities] = useState<any[]>([]);
-  const [stats, setStats] = useState<any>({});
+  const [targets, setTargets] = useState<Record<string, unknown>[]>([]);
+  const [scans, setScans] = useState<Record<string, unknown>[]>([]);
+  const [vulnerabilities, setVulnerabilities] = useState<Record<string, unknown>[]>([]);
+  const [stats] = useState<Record<string, unknown>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -102,7 +102,7 @@ export default function ScannerPage() {
           </div>
           <div>
             <p className="text-sm text-gray-400 mb-1">Active Scans</p>
-            <p className="text-2xl font-bold text-white">{scans.filter((s: any) => s.status === 'running').length}</p>
+            <p className="text-2xl font-bold text-white">{scans.filter((s) => (s.status as string) === 'running').length}</p>
           </div>
         </div>
       </div>
@@ -157,7 +157,7 @@ export default function ScannerPage() {
             </thead>
             <tbody className="bg-gray-800 divide-y divide-gray-700">
               {scans.length > 0 ? (
-                scans.map((scan: any) => (
+                scans.map((scan: Record<string, unknown>) => (
                   <tr key={scan.id} className="hover:bg-gray-700/50 transition">
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">{scan.target || 'N/A'}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300 capitalize">{scan.scan_type || 'N/A'}</td>
@@ -210,7 +210,7 @@ export default function ScannerPage() {
             </thead>
             <tbody className="bg-gray-800 divide-y divide-gray-700">
               {vulnerabilities.length > 0 ? (
-                vulnerabilities.map((vuln: any) => (
+                vulnerabilities.map((vuln: Record<string, unknown>) => (
                   <tr key={vuln.id} className="hover:bg-gray-700/50 transition">
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">{vuln.title || 'Unknown'}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{vuln.target || 'N/A'}</td>
