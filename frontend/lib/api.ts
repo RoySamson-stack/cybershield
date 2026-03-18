@@ -8,13 +8,12 @@ const api = axios.create({
 });
 
 // Cache configuration
-const cache = new Map<string, { data: unknown; timestamp: number }>();
+const cache = new Map<string, { data: Record<string, unknown>; timestamp: number }>();
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
 // Cache helper functions
-const getCacheKey = (url: string, params?: Record<string, unknown>) => {
-  return `${url}${params ? JSON.stringify(params) : ''}`;
-};
+const getCacheKey = (url: string, params?: Record<string, unknown>) =>
+  `${url}${params ? JSON.stringify(params) : ''}`;
 
 const getCached = (key: string) => {
   const cached = cache.get(key);
@@ -25,7 +24,7 @@ const getCached = (key: string) => {
   return null;
 };
 
-const setCached = (key: string, data: unknown) => {
+const setCached = (key: string, data: Record<string, unknown>) => {
   cache.set(key, { data, timestamp: Date.now() });
 };
 

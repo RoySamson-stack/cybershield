@@ -93,7 +93,7 @@ export default function ShareThreatPage() {
       setSuccess('Threat shared successfully!');
       setTimeout(() => router.push('/dashboard/threats'), 1200);
     } catch (err: unknown) {
-      const error = err as { message?: string; response?: { data?: Record<string, unknown> } };
+      const error = err as Error & { response?: { data?: Record<string, string | string[]> } };
       const message =
         typeof error?.message === 'string' && error.message.includes('Indicators must be')
           ? error.message
